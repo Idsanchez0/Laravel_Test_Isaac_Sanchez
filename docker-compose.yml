@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+  test:
+    image: test/backend
+    container_name: test
+    restart: unless-stopped
+    working_dir: /var/www
+    expose:
+        - "80"
+    volumes:
+      - ./:/var/www
+      - ./nginx/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - test
+  test-nginx:
+    image: nginx:alpine
+    container_name: test-nginx
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www
+      - ./nginx:/etc/nginx/conf.d/
+      
+    ports:
+        - 9193:80
+    depends_on:
+      - test
+    networks:
+      - test
+volumes:
+ 
+  html:
+  vhostd:
+networks:
+  test:
